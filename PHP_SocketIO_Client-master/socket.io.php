@@ -45,7 +45,7 @@ class SocketIO
         if ($handshaked){
             fwrite($fd, $this->hybi10Encode('42["' . $action . '", "' . addslashes($data) . '"]'));
 			// var_dump(fread($fd,1000000));
-			usleep(2000);
+			usleep(3000);
 			fread($fd,1000000);
 			fclose($fd);
             return true;
