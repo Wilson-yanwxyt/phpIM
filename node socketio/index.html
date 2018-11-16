@@ -1,0 +1,14 @@
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io();
+  <!-- socket.join('page'); -->
+  socket.on('news', (data) => {
+    show_msg(data);
+    <!-- console.log(data); -->
+    <!-- socket.emit('my other event', { my: 'data' }); -->
+  });
+  function show_msg(msg) {
+    <!-- alert(msg.calltimes); -->
+    console.log(msg);
+  }
+</script>
