@@ -44,20 +44,10 @@ class SocketIO
         $handshaked = ($keyAccept === $expectedResonse) ? true : false;
         if ($handshaked){
             fwrite($fd, $this->hybi10Encode('42["' . $action . '", "' . addslashes($data) . '"]'));
-            /*
-            * waitting times
-            */
-			usleep(2000);
 			fread($fd,1000000);
-            /* 
-            * close the connection
-            */
 			fclose($fd);
             return true;
         } else {
-            /* 
-            * close the connection
-            */
 			fclose($fd);
 			return false;
 		}
