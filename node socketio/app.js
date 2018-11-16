@@ -2,14 +2,22 @@ const io = require('socket.io')();
 var counts = 0;
 io.on('connection', client => { 
   client.on('mymsg', (data) => {
-	console.log(data,'times :%s',++counts);
+    let json_data = JSON.parse(data);
+	console.log(json_data.code,json_data.msg,'called times:',++counts);
 	client.send(counts);
 	client.disconnect(true);
   });
   client.on('init',(data) => {
-	console.log(data,'init msg',counts);
+    let json_data = JSON.parse(data);
+	console.log(json_data.code,json_data.msg,'init called');      
+	// console.log(data,'init msg',counts);
 	client.send(counts);
 	client.disconnect(true);
+  });
+  client.on('str',(data) => {
+     console.log(data,' str called');
+     client.send('end');
+     client.disconnect(true);
   });
   client.on('disconnect', () => { console.log('disconnected...') });
  });

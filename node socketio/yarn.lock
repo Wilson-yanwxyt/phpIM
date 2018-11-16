@@ -224,6 +224,10 @@ xmlhttprequest-ssl@~1.5.4:
   version "1.5.5"
   resolved "http://registry.npm.taobao.org/xmlhttprequest-ssl/download/xmlhttprequest-ssl-1.5.5.tgz#c2876b06168aadc40e57d97e81191ac8f4398b3e"
 
+yarn@^1.12.3:
+  version "1.12.3"
+  resolved "http://registry.npm.taobao.org/yarn/download/yarn-1.12.3.tgz#fb4599bf1f8da01552bcc7e1571dfd4e53788203"
+
 yeast@0.1.2:
   version "0.1.2"
   resolved "http://registry.npm.taobao.org/yeast/download/yeast-0.1.2.tgz#008e06d8094320c372dbc2f8ed76a0ca6c8ac419"
