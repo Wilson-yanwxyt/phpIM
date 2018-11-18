@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>刷卡信息</title>
+	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    <script src="https://cdn.bootcss.com/vue/2.5.9/vue.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      var teststr = 'abcd';
+    </script>    
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes" /> <!-- apple devices fullscreen -->
+	<meta name="apple-touch-fullscreen" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">     
+</head>
+<body>
+  <div id="app">
+    <!-- <img src="https://vuejs.org/images/logo.png" alt="Vue logo"> -->
+    <span>当日刷卡人数：{{accTodayDetail.length}}</span>
+	    <hr>
+		<table class="pure-table left" style="font-size:24px;">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>姓名</th>
+					<th>说明</th>
+					<th>操作时间</th>
+					<th>份数</th>
+				</tr>
+			</thead>
+            {{ send_msg}}
+			<tbody v-for ="(onedata,index) in accTodayDetail"  >
+				<tr  :class="{ 'pure-table-odd': index %2 ==1}" :style="newest(onedata.OP_DATE,onedata.NAME,onedata.consume_count)" >
+				    <td>{{accTodayDetail.length-index}}</td>
+					<td>{{onedata.NAME}}</td>
+					<td>{{onedata.REMARK}}</td>
+					<td>{{timestamp2str(onedata.OP_DATE)}}</td>
+					<td>{{onedata.consume_count}}</td>
+				</tr>
+			</tbody>
+		</table>
+
+  </div>
+
+  <script>
+
+    var app = new Vue({
+      el: '#app',
+      data: {
+        send_msg:'init msg',
+        accTodayDetail:[
+					{NAME:'kkk',REMARK:'消费',OP_DATE:1511709349,consume_count:1}
+				],
+				arr_checked:[],						//刷卡字体放大数组
+			},
+		created: function(){
+                var vm = this;
+				//var woker = new Woker('974SwRDbwbl_joKe');
+
+				//var channel = woker.subscribe('ywx1');
+				//var str1='';
+				//channel.on('checkcard', function(data) {
+						//alert(data.message);
+				//str1 = str1+data.message;
+				//console.log(str1);
+				//channel.emit('ywx1','nofity','test emit');
+				// alert(str1);
+                  //var socket = io();
+                  socket.on('check', function (data) {
+                    //vm.show_msg(data);
+                    vm.add_check(data);
+
+                    //console.log(data);
+                  });     
+				//})
+			},
+      methods: {                
+				newest(para_date,para_name,para_count){
+					var newDate = new Date(para_date);
+					//console.log(para_date.getTime());
+					//console.log("111")
+					if(newDate.getTime()>this.current_time_str){
+						//this.Ring();
+						//console.log("222");
+						if(this.arr_checked.indexOf(para_name)===-1){		//还没有改变过字体
+							//console.log(para_name);
+							this.arr_checked.push(para_name);		// 插入元素
+							this.Ring();
+						};
+						return 'font-size:40px;color:orange';
+					}else{
+						var index1=this.arr_checked.indexOf(para_name);
+						if(index1 !=-1){
+							this.arr_checked.splice(index1,1);	//删除元素
+							//console.log('delete '+para_name);
+						};
+						return para_count>1?"color:blue":"";
+					};
+					//return newDate.getTime()>this.current_time_str?'font-size:40px;color:orange':'';
+					//return 'font-size:30px;color:orange'
+
+				},
+                show_msg(msg) {
+                    console.log(msg);
+                    console.log('checkmsg',msg.checkmsg);
+                },
+                add_check(data) {
+                    const vm = this;
+                    var tmpdata = data;
+                    console.log(data.checkmsg);
+                    //tmparr['NAME'] = data.NAME;
+                    //tmparr['REMARK'] = data.REMARK;
+                    //tmparr['OP_DATE'] = data.OP_DATE;
+                    //tmparr['consume_count'] = data.consume_count;
+                    vm.accTodayDetail.unshift(tmpdata.checkmsg);
+                    //console.log(vm.accTodayDetail);
+                },
+				timestamp2str:function(param_timestamp){
+						var newDate = new Date(param_timestamp*1000);
+					//return newDate.toLocaleDateString()+' '+newDate.toLocaleTimeString();
+					return (newDate.getMonth()+1)+'月'+
+							newDate.getDate()+'日 '+
+							newDate.getHours()+':'+
+							newDate.getMinutes()+':'+
+							newDate.getSeconds();
+							//newDate.toLocaleTimeString();
+				},				
+      }
+    })
+  </script>
+</body>
+</html>
